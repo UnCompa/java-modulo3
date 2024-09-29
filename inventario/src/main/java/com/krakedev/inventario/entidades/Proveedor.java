@@ -9,7 +9,7 @@ public class Proveedor {
 	private String direccion;
 
 	public Proveedor() {
-		
+
 	}
 
 	public Proveedor(String identifficador, TipoDocumento tipoDocumento, String nombre, String telefono, String correo,
@@ -69,8 +69,11 @@ public class Proveedor {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	
-	
 
-	
+	@Override
+	public String toString() {
+		return "Proveedor [identifficador=" + identifficador + ", tipoDocumento=" + tipoDocumento + ", nombre=" + nombre
+				+ ", telefono=" + telefono + ", correo=" + correo + ", direccion=" + direccion + "]";
+	}
+
 }

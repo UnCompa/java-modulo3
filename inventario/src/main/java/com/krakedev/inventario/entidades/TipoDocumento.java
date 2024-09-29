@@ -4,6 +4,10 @@ public class TipoDocumento {
     private String codigo;
     private String descripcion;
 
+    public TipoDocumento() {
+        
+    }
+
     public TipoDocumento(String codigo, String descripcion) {
         this.codigo = codigo;
         this.descripcion = descripcion;
