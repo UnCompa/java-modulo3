@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.krakedev.inventario.entidades.Proveedor;
+import com.krakedev.inventario.entidades.TipoDocumento;
 import com.krakedev.inventario.utils.ConexionBDD;
 
 public class ProveedoresBDD {
@@ -16,19 +17,24 @@ public class ProveedoresBDD {
 		ResultSet rs = null;
 		try {
 			conexion = ConexionBDD.conectar();
-			ps = conexion.prepareStatement("select * from proveedores "
-					+ "where upper(nombre) like ? ");
+			ps = conexion.prepareStatement(
+					"select pro.identificador, pro.nombre, pro.telefono, pro.correo, pro.direccion, td.codigo, td.descripcion "
+							+ //
+							"from proveedores as pro, tipo_documento as td " + //
+							"where pro.tipo_documento = td.codigo and upper(pro.nombre) like ?;");
 			ps.setString(1, "%" + subcadena.toUpperCase() + "%");
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				String identificador = rs.getString("identificador");
-				String tipoDocumento = rs.getString("tipo_documento");
+				String codigoTipoDocumento = rs.getString("codigo");
+				String descripcionTipoDocumento = rs.getString("descripcion");
+				TipoDocumento tipoDocumento = new TipoDocumento(codigoTipoDocumento, descripcionTipoDocumento);
 				String nombre = rs.getString("nombre");
 				String telefono = rs.getString("telefono");
 				String correo = rs.getString("telefono");
 				String direccion = rs.getString("direccion");
-			Proveedor pro = new Proveedor(identificador, tipoDocumento, nombre,telefono,correo,direccion);
+				Proveedor pro = new Proveedor(identificador, tipoDocumento, nombre, telefono, correo, direccion);
 				proveedores.add(pro);
 			}
 
