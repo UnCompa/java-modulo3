@@ -20,12 +20,13 @@ public class ProductosBDD {
 		try {
 			conexion = ConexionBDD.conectar();
 			ps = conexion.prepareStatement("select pr.codigo_producto, pr.nombre as nombre_producto, " +
-								"pr.udm as unidad_medida, udm.descripcion,cast(pr.precio_venta as decimal(6,2)), pr.tiene_iva, " +
-								"cast(pr.coste as decimal(5,4)), cat.codigo_cat as categoria, cat.nombre as nombre_categoria ,pr.stock " +
-								"from productos as pr, unidades_medida as udm, categorias as cat " + 
-								"where pr.udm = udm.codigo_udm " + 
-								"and cat.codigo_cat = pr.categoria " +
-								"and upper(pr.nombre) like ?");
+					"pr.udm as unidad_medida, udm.descripcion,cast(pr.precio_venta as decimal(6,2)), pr.tiene_iva, " +
+					"cast(pr.coste as decimal(5,4)), cat.codigo_cat as categoria, cat.nombre as nombre_categoria ,pr.stock "
+					+
+					"from productos as pr, unidades_medida as udm, categorias as cat " +
+					"where pr.udm = udm.codigo_udm " +
+					"and cat.codigo_cat = pr.categoria " +
+					"and upper(pr.nombre) like ?");
 			ps.setString(1, "%" + subcadena.toUpperCase() + "%");
 			rs = ps.executeQuery();
 
@@ -39,9 +40,10 @@ public class ProductosBDD {
 				BigDecimal coste = rs.getBigDecimal("coste");
 				int codigoCategoria = rs.getInt("categoria");
 				String nombreCategoria = rs.getString("nombre_categoria");
-				Categoria categoria = new Categoria(codigoCategoria,nombreCategoria);
+				Categoria categoria = new Categoria(codigoCategoria, nombreCategoria);
 				int stock = rs.getInt("stock");
-				Producto producto = new Producto(codigoProducto,nombreProducto,udm,precioVenta,tieneIva,coste,categoria,stock);
+				Producto producto = new Producto(codigoProducto, nombreProducto, udm, precioVenta, tieneIva, coste,
+						categoria, stock);
 				productos.add(producto);
 			}
 
@@ -51,24 +53,25 @@ public class ProductosBDD {
 		return productos;
 	}
 
-	/* public void insertar(Producto Producto) throws Exception {
+	public void insertar(Producto producto) throws Exception {
 		Connection conexion = null;
 		PreparedStatement ps = null;
 		try {
 			conexion = ConexionBDD.conectar();
 			ps = conexion.prepareStatement(
-					"insert into productos (identificador,tipo_documento, nombre, telefono, correo, direccion) " +
-							"values (?,?,?,?,?,?)");
-			ps.setString(1, Producto.getIdentifficador());
-			ps.setString(2, Producto.getTipoDocumento().getCodigo());
-			ps.setString(3, Producto.getNombre());
-			ps.setString(4, Producto.getTelefono());
-			ps.setString(5, Producto.getCorreo());
-			ps.setString(6, Producto.getDireccion());
+					"INSERT INTO productos (nombre,udm,precio_venta,tiene_iva,coste,categoria,stock)" +
+							"VALUES (?,?,?,?,?,?,?)");
+			ps.setString(1, producto.getNombre());
+			ps.setString(2, producto.getUdm().getNombre());
+			ps.setBigDecimal(3, producto.getPrecioVenta());
+			ps.setBoolean(4, producto.isTieneIva());
+			ps.setBigDecimal(5, producto.getCoste());
+			ps.setInt(6, producto.getCategoria().getCodigoCat());
+			ps.setInt(7, producto.getStock());
 			ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Error al insertar");
+			throw new Exception("Error al crear un producto");
 		}
-	} */
+	}
 }
