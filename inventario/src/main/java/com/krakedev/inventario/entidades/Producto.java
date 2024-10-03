@@ -15,6 +15,10 @@ public class Producto {
     public Producto() {
     }
 
+    public Producto(int codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
     public Producto(int codigoProducto, String nombre, UnidadDeMedida udm, BigDecimal precioVenta, boolean tieneIva,
             BigDecimal coste, Categoria categoria, int stock) {
         this.codigoProducto = codigoProducto;
