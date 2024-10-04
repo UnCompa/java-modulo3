@@ -9,6 +9,15 @@ public class Pedido {
     private Date fecha;
     private EstadoPedido estado;
 
+    public Pedido(int numero_pedido, Proveedor proveedor, Date fecha, EstadoPedido estado,
+            ArrayList<DetallePedido> detalles) {
+        this.numero_pedido = numero_pedido;
+        this.proveedor = proveedor;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.detalles = detalles;
+    }
+
     public Pedido(Proveedor proveedor, Date fecha, EstadoPedido estado) {
         this.proveedor = proveedor;
         this.fecha = fecha;

@@ -8,6 +8,9 @@ public class Categoria {
     public Categoria() {
     }
 
+    public Categoria(int codigoCat) {
+        this.codigoCat = codigoCat;
+    }
     public Categoria(int codigoCat, String nombre) {
         this.codigoCat = codigoCat;
         this.nombre = nombre;
@@ -17,6 +20,11 @@ public class Categoria {
         this.codigoCat = codigoCat;
         this.nombre = nombre;
         this.categoriaPadre = categoriaPadre;
+    }
+    public Categoria(int codigoCat, String nombre, int categoriaPadre) {
+        this.codigoCat = codigoCat;
+        this.nombre = nombre;
+        this.categoriaPadre = new Categoria(categoriaPadre);
     }
 
     public int getCodigoCat() {

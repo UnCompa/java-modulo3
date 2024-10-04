@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.krakedev.inventario.entidades.DetallePedido;
+import com.krakedev.inventario.entidades.EstadoPedido;
 import com.krakedev.inventario.entidades.Pedido;
+import com.krakedev.inventario.entidades.Producto;
+import com.krakedev.inventario.entidades.Proveedor;
 import com.krakedev.inventario.utils.ConexionBDD;
 
 public class PedidosBDD {
@@ -108,6 +111,55 @@ public class PedidosBDD {
             e.printStackTrace();
             throw new Exception("Error al crear un producto");
         }
+    }
+
+    public ArrayList<Pedido> buscarPorProveedor(String codigoProveedor) throws Exception {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        Connection conexion = null;
+        PreparedStatement ps = null;
+        PreparedStatement psDet = null;
+        ResultSet rsCab = null;
+        ResultSet rsDet = null;
+
+        try {
+            conexion = ConexionBDD.conectar();
+            ps = conexion.prepareStatement("SELECT * FROM cabecera_pedido WHERE proveedor = ?;");
+            ps.setString(1, codigoProveedor);
+            rsCab = ps.executeQuery();
+
+            while (rsCab.next()) {
+                int numeroPedido = rsCab.getInt("numero_pedido");
+                Date fecha = rsCab.getDate("fecha");
+                String estado = rsCab.getString("estado_fk");
+
+                ArrayList<DetallePedido> detalles = new ArrayList<>();
+                psDet = conexion.prepareStatement(
+                        "SELECT * FROM detalle_pedido WHERE cabecera_pedido_fk = ?;");
+                psDet.setInt(1, numeroPedido);
+                rsDet = psDet.executeQuery();
+
+                while (rsDet.next()) {
+                    int codigo = rsDet.getInt("codigo");
+                    int codigoProducto = rsDet.getInt("producto");
+                    BigDecimal cantidadSolicitada = rsDet.getBigDecimal("cantidad_solicitada");
+                    BigDecimal subtotal = rsDet.getBigDecimal("subtotal");
+                    BigDecimal cantidadRecibida = rsDet.getBigDecimal("cantidad_recibida");
+                    Producto producto = new Producto(codigoProducto);
+                    DetallePedido detallePedido = new DetallePedido(codigo, numeroPedido, producto, cantidadSolicitada,
+                            subtotal, cantidadRecibida);
+                    detalles.add(detallePedido);
+                }
+
+                Proveedor proveedor = new Proveedor(codigoProveedor);
+                EstadoPedido estadoPedido = new EstadoPedido(Integer.parseInt(estado));
+                Pedido pedidoRecuperado = new Pedido(numeroPedido, proveedor, fecha, estadoPedido, detalles);
+                pedidos.add(pedidoRecuperado);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Error al buscar pedidos por proveedor", e);
+        }
+        return pedidos;
     }
 
 }

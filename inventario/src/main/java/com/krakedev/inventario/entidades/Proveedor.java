@@ -12,6 +12,10 @@ public class Proveedor {
 
 	}
 
+	public Proveedor(String identificador) {
+		this.identificador = identificador;
+	}
+
 	public Proveedor(String identificador, TipoDocumento tipoDocumento, String nombre, String telefono, String correo,
 			String direccion) {
 		this.identificador = identificador;
