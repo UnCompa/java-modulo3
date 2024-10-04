@@ -74,4 +74,26 @@ public class ProductosBDD {
 			throw new Exception("Error al crear un producto");
 		}
 	}
+
+	public void actualizar(Producto producto) throws Exception {
+		Connection conexion = null;
+		PreparedStatement ps = null;
+		try {
+			conexion = ConexionBDD.conectar();
+			ps = conexion.prepareStatement(
+					"UPDATE productos SET nombre = ?, udm = ?, precio_venta = ?, tiene_iva = ?, coste = ?, categoria = ?, stock = ? WHERE codigo_producto = ?");
+			ps.setString(1, producto.getNombre());
+			ps.setString(2, producto.getUdm().getNombre());
+			ps.setBigDecimal(3, producto.getPrecioVenta());
+			ps.setBoolean(4, producto.isTieneIva());
+			ps.setBigDecimal(5, producto.getCoste());
+			ps.setInt(6, producto.getCategoria().getCodigoCat());
+			ps.setInt(7, producto.getStock());
+			ps.setInt(8, producto.getCodigoProducto());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Error al crear un producto");
+		}
+	}
 }

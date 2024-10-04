@@ -17,7 +17,7 @@ public class ServicioVenta {
         VentasBDD ventasBDD = new VentasBDD();
         try {
             ventasBDD.guardar(venta);
-            return Response.ok("Pedido insertado: " + venta.toString()).build();
+            return Response.ok("Venta insertado: " + venta.toString()).build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().build();
