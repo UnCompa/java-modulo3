@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -59,4 +60,54 @@ public class PedidosBDD {
             throw new Exception("Error al crear un producto");
         }
     }
+
+    public void recibir(Pedido pedido) throws Exception {
+        Connection conexion = null;
+        PreparedStatement ps = null;
+        PreparedStatement psDet = null;
+        PreparedStatement psHis = null;
+        Date fechaActual = new Date();
+        Timestamp fechaTimestamp = new Timestamp(fechaActual.getTime());
+        try {
+            conexion = ConexionBDD.conectar();
+            ps = conexion.prepareStatement("UPDATE cabecera_pedido set estado_fk = ? " +
+                    "WHERE numero_pedido = ?;");
+            ps.setString(1, "R");
+            System.out.println(pedido.getNumero_pedido());
+            ps.setInt(2, pedido.getNumero_pedido());
+
+            ps.executeUpdate();
+
+            ArrayList<DetallePedido> detalles = pedido.getDetalles();
+            for (DetallePedido detallePedido : detalles) {
+
+                psDet = conexion.prepareStatement(
+                        "UPDATE detalle_pedido set subtotal = ?, cantidad_recibida = ? "
+                                +
+                                "WHERE codigo = ?");
+
+                BigDecimal pv = detallePedido.getProducto().getPrecioVenta();
+                BigDecimal subtotal = pv.multiply(detallePedido.getCantidadRecibida());
+                psDet.setBigDecimal(1, subtotal);
+                psDet.setBigDecimal(2, detallePedido.getCantidadRecibida());
+                psDet.setInt(3, detallePedido.getCodigo());
+
+                psDet.executeUpdate();
+
+                psHis = conexion.prepareStatement(
+                        "INSERT INTO historial_stock (fecha, referencia, producto_fk,cantidad) VALUES (?,?,?,?);");
+                psHis.setTimestamp(1, fechaTimestamp);
+                psHis.setString(2, "PEDIDO " + pedido.getNumero_pedido());
+                psHis.setInt(3, detallePedido.getCodigo());
+                psHis.setBigDecimal(4, detallePedido.getCantidadRecibida());
+
+                psHis.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Error al crear un producto");
+        }
+    }
+
 }

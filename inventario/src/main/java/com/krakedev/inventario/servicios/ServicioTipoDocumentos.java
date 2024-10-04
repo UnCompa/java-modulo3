@@ -22,7 +22,6 @@ public class ServicioTipoDocumentos {
             ArrayList<TipoDocumento> proveedores = doc.buscar();
             return Response.ok(proveedores).build();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return Response.serverError().build();
         }

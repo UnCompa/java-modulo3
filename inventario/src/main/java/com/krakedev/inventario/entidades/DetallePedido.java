@@ -8,7 +8,7 @@ public class DetallePedido {
     private Producto producto;
     private BigDecimal cantidadSolicitada;
     private BigDecimal subtotal;
-    private int cantidadRecibida;
+    private BigDecimal cantidadRecibida;
 
     public DetallePedido(int cebecera, Producto producto, BigDecimal cantidadSolicitada, BigDecimal subtotal) {
         this.cebecera = cebecera;
@@ -18,7 +18,7 @@ public class DetallePedido {
     }
 
     public DetallePedido(int codigo, int cebecera, Producto producto, BigDecimal cantidadSolicitada,
-            BigDecimal subtotal, int cantidadRecibida) {
+            BigDecimal subtotal, BigDecimal cantidadRecibida) {
         this.codigo = codigo;
         this.cebecera = cebecera;
         this.producto = producto;
@@ -70,11 +70,11 @@ public class DetallePedido {
         this.subtotal = subtotal;
     }
 
-    public int getCantidadRecibida() {
+    public BigDecimal getCantidadRecibida() {
         return cantidadRecibida;
     }
 
-    public void setCantidadRecibida(int cantidadRecibida) {
+    public void setCantidadRecibida(BigDecimal cantidadRecibida) {
         this.cantidadRecibida = cantidadRecibida;
     }
 

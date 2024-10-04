@@ -38,7 +38,7 @@ public class ServicioProductos {
 		ProductosBDD pro = new ProductosBDD();
 		try {
 			pro.insertar(producto);
-			return Response.ok("Proveedor insertado: " + producto.toString()).build();
+			return Response.ok("Producto insertado: " + producto.toString()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
